@@ -14,7 +14,7 @@ You may not use the Software, or any derivative works, for commercial purposes. 
 
 ## 3. Attribution
 All forks or redistributions must include a visible reference to the original repository:  
-[https://github.com//BryanFrancotte/baylife-nasa-client](https://github.com//BryanFrancotte/baylife-nasa-client)
+[https://github.com//BryanFrancotte/baylife-nasa-api](https://github.com//BryanFrancotte/baylife-nasa-api)
 
 ## 4. Precedence
 This addendum takes precedence over any conflicting terms in GPL-3.0 regarding commercial use.
