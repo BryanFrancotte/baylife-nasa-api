@@ -16,8 +16,8 @@ export const fleet = new Elysia({prefix: "/fleet"})
     })
     .post("/", async ({ body, set }) => {
         try {
-            const newCar = new Car(body);
-            await newCar.save();
+            const mappedCar = await mapCar(body);
+            const newCar = Car.create(mappedCar)
             return {
                 message: "car added successfully.",
                 status: 200,
@@ -28,3 +28,16 @@ export const fleet = new Elysia({prefix: "/fleet"})
     },  {
         body: FleetModel.fleetBody,
     })
+
+async function mapCar(input: FleetModel.fleetBody){
+    const carCount = await Car.countDocuments();
+    return {
+        order: carCount + 1,
+        vehicleType: input.name,
+        plate: input.plate,
+        mileage: 0,
+        seating: input.seating,
+        storage: input.storage,
+        location: input.location,
+    }
+}
