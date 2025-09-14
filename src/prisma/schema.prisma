@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+generator db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator prismabox {
+  provider                    = "prismabox"
+  typeboxImportDependencyName = "elysia"
+  typeboxImportVariableName   = "t"
+  inputModel                  = true
+  output                      = "../generated/prismabox"
+}
+
+model Role {
+  id         String @id @default(cuid())
+  order      Int    @unique
+  name       String
+  permission String
+  Percentage Int
+}
+
+model Car {
+  id          String @id @default(cuid())
+  order       Int @unique
+  vehicleName String
+  plate       String
+  mileage     Int
+  seating     Int
+  storage     Int
+  location    String
+}

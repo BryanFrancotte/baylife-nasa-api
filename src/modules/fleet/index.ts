@@ -1,5 +1,4 @@
 import {Elysia} from "elysia";
-import Car from "../fleet/entity";
 import {FleetModel} from "./model";
 
 export const fleet = new Elysia({prefix: "/fleet"})
