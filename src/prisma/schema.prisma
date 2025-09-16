@@ -3,7 +3,7 @@ generator client {
   output   = "../generated/prisma"
 }
 
-generator db {
+datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
@@ -16,12 +16,27 @@ generator prismabox {
   output                      = "../generated/prismabox"
 }
 
+model User {
+  id String @id @default(cuid())
+  name String
+  email String?
+  phone String?
+  picture String?
+  roleId String?
+
+  Role Role? @relation(fields: [roleId], references: [id])
+
+  Sales Sale[]
+}
+
 model Role {
   id         String @id @default(cuid())
   order      Int    @unique
   name       String
   permission String
-  Percentage Int
+  percentage Int
+
+  Users User[]
 }
 
 model Car {
@@ -33,4 +48,50 @@ model Car {
   seating     Int
   storage     Int
   location    String
+}
+
+
+model Product {
+  id String @id @default(cuid())
+  name String
+  price Int
+  stock Int
+  categoryId String?
+
+  Category Category? @relation(fields: [categoryId], references: [id])
+
+  SaleLines SaleLine[]
+}
+
+model Category {
+  id String @id @default(cuid())
+  name String
+  parentId String?
+
+  Parent Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+
+  Children Category[] @relation("CategoryToCategory")
+  Products Product[]
+
+  @@index([parentId])
+}
+
+model SaleLine {
+  id String @id @default(cuid())
+  quantity Int
+  productId String
+  saleId String
+
+  Product Product @relation(fields: [productId], references: [id])
+  Sale Sale @relation(fields: [saleId], references: [id])
+}
+
+model Sale {
+  id String @id @default(cuid())
+  date DateTime @default(now())
+  userId String
+
+  User User @relation(fields: [userId], references: [id])
+
+  SaleLines SaleLine[]
 }

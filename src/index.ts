@@ -3,8 +3,6 @@ import { Elysia } from "elysia";
 import swagger from "@elysiajs/swagger";
 import apollo, {gql} from "@elysiajs/apollo";
 
-import "./database/db.setup";
-
 import {role} from "./modules/role";
 import {fleet} from "./modules/fleet";
 
