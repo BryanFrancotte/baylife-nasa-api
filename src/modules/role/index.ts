@@ -1,15 +1,21 @@
 import {Elysia, t} from "elysia";
-import {PrismaClient} from "../../generated/prisma";
-import {RolePlain, RolePlainInputCreate} from "../../generated/prismabox/Role";
-
-const prisma = new PrismaClient();
+import {Role, RolePlain, RolePlainInputCreate} from "../../generated/prismabox/Role";
+import {addRole, deleteRole, getRoles, updateRole} from "./handlers";
 
 export const role = new Elysia({prefix: "/role"})
-    .get("/", async () => await prisma.role.findMany(), {response: t.Array(RolePlain)})
-    .post("/", async ({body}) => prisma.role.create({
-        data: body
-    }), {
-        body: RolePlainInputCreate,
-        response: RolePlain
-    }
+    .get("/",
+        () => getRoles(),
+        {response: t.Array(RolePlain)})
+    .get("/:id", () => "get post by id")
+    .post("/",
+        ({body}) => addRole(body),
+        {body: RolePlainInputCreate, response: RolePlain}
+    )
+    .patch("/:id",
+        ({params: {id}, body}) => updateRole(id, body),
+        {params: t.Object({id: t.String()}), body: RolePlainInputCreate, response: RolePlain}
+    )
+    .delete("/",
+        ({body}) => deleteRole(body),
+        {body: t.Object({id: t.String()}), response: RolePlain}
     )

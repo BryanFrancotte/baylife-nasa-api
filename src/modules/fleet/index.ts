@@ -1,16 +1,24 @@
 import {Elysia, t} from "elysia";
-import {PrismaClient} from "../../generated/prisma"
-import {CarPlain, CarPlainInputCreate} from "../../generated/prismabox/Car";
-
-const prisma = new PrismaClient();
+import {Car, CarInputCreate, CarInputUpdate} from "../../generated/prismabox/Car";
+import {addCar, deleteCar, getCar, getCars, updateCar} from "./handlers";
 
 export const fleet = new Elysia({prefix: "/fleet"})
     .get("/",
-        async () => await prisma.car.findMany(),
-        {response: t.Array(CarPlain)})
-    .post("/", async ({body}) => prisma.car.create({
-        data: body
-    }), {
-        body: CarPlainInputCreate,
-        response: CarPlain
-    })
+        () => getCars(),
+        {response: t.Array(Car)}
+    )
+    .get("/:id",
+        ({params: {id}}) => getCar(id),
+        {params: t.Object({id: t.String()}), response: Car}
+    )
+    .post("/",
+        ({body}) => addCar(body),
+        {body: CarInputCreate, response: Car}
+    )
+    .patch("/:id",
+        ({params: {id}, body}) => updateCar(id, body),
+        {params: t.Object({id: t.String()}), body: CarInputUpdate, response: Car}
+    )
+    .delete("/",
+        ({body}) => deleteCar(body),
+        {body: t.Object({id: t.String()}), response: Car})

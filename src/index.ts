@@ -1,39 +1,16 @@
 import { Elysia } from "elysia";
 
 import swagger from "@elysiajs/swagger";
-import apollo, {gql} from "@elysiajs/apollo";
 
 import {role} from "./modules/role";
 import {fleet} from "./modules/fleet";
+import {product} from "./modules/product";
 
 const app = new Elysia()
     .use(swagger())
-    .use(apollo({
-        typeDefs: gql`
-				type Book {
-					title: String
-					author: String
-				}
-
-				type Query {
-					books: [Book]
-				}
-			`,
-        resolvers: {
-            Query: {
-                books: () => {
-                    return [
-                        {
-                            title: 'Elysia',
-                            author: 'saltyAom'
-                        }
-                    ]
-                }
-            }
-        }
-    }))
     .use(role)
     .use(fleet)
+    .use(product)
     .get("/", () => "Hello Elysia")
     .listen(5200);
 
