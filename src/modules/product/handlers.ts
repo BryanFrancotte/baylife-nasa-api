@@ -25,7 +25,7 @@ export async function addProduct(options: AddProductBody){
         newProduct.Category = {connect: {id: categoryId}}
     }
     try {
-        return await prisma.product.create({data: {name, price, stock}})
+        return await prisma.product.create({data: newProduct})
     } catch (e: unknown) {
         console.log(`Error adding product: ${e}`)
         throw e;
@@ -46,9 +46,8 @@ export async function updateProduct(id: string, options: UpdateProductBody){
     }
 }
 
-export async function deleteProduct(options: {id: string}){
+export async function deleteProduct(id: string){
     try {
-        const {id} = options
         return await prisma.product.delete({where: {id}})
     } catch (e: unknown) {
       console.log(`Error deleting product: ${e}`)
