@@ -5,9 +5,11 @@ import swagger from "@elysiajs/swagger";
 import {role} from "./modules/role";
 import {fleet} from "./modules/fleet";
 import {product} from "./modules/product";
+import {user} from "./modules/user";
 
 const app = new Elysia()
     .use(swagger())
+    .use(user)
     .use(role)
     .use(fleet)
     .use(product)

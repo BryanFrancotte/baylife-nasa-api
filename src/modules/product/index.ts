@@ -1,17 +1,31 @@
-import { PrismaClient } from "../../generated/prisma"
 import {Elysia, t} from "elysia";
-import {ProductPlain, ProductPlainInputCreate} from "../../generated/prismabox/Product";
-
-const prisma = new PrismaClient()
+import {addProduct, deleteProduct, getProduct, getProducts, updateProduct} from "./handlers";
+import {addProductBody, productPlain, updateProductBody} from "./model";
 
 export const product = new Elysia({prefix: "/product"})
-    .get("/", async () => await prisma.product.findMany(), {response: t.Array(ProductPlain)})
-    .get("/:id", () => "get post by id")
-    .post("/", async ({body}) => prisma.product.create(
-        {data: body}
-    ), {
-        body: ProductPlainInputCreate,
-        response: ProductPlain
-    })
-    .patch("/:id", () => "update post by id")
-    .delete("/:id", () => "delete post by id")
+
+    .get("/",
+        () => getProducts()
+    )
+    .get("/:id",
+        ({params:{id}}) => getProduct(id)
+    )
+    .guard(
+        {body: addProductBody}
+    )
+    .post("/",
+        ({body}) => addProduct(body),
+        {response: productPlain}
+    )
+    .guard(
+        {body: updateProductBody}
+    )
+    .patch("/:id",
+        ({params: {id}, body}) => updateProduct(id, body),
+        {params: t.Object({id: t.String()}), response: productPlain}
+    )
+    .guard(
+        {body: t.Object({id: t.String()})}
+    )
+    .delete("/:id", ({body}) => deleteProduct(body))
+    //TODO: check if the delete is implemented correctly
